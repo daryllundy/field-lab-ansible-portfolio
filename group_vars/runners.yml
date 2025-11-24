@@ -1,0 +1,2 @@
+gitlab_runner_registration_token: "REPLACE_ME"
+gitlab_runner_executor: "docker"

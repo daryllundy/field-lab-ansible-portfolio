@@ -1,0 +1,26 @@
+- name: Install NFS server and restic
+  ansible.builtin.apt:
+    name:
+      - nfs-kernel-server
+      - restic
+    state: present
+    update_cache: yes
+
+- name: Ensure export path
+  ansible.builtin.file:
+    path: "{{ nfs_export_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Configure exports
+  ansible.builtin.copy:
+    dest: /etc/exports.d/lab.exports
+    content: "{{ nfs_export_path }} 192.168.0.0/16(rw,sync,no_subtree_check)"
+  notify: Exportfs reload
+
+- name: Initialize restic repo
+  ansible.builtin.shell: |
+    export RESTIC_PASSWORD="{{ restic_password }}"
+    restic init --repo "{{ restic_repo }}"
+  args:
+    creates: "{{ restic_repo }}/config"

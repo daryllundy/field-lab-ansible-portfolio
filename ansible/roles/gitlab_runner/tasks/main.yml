@@ -1,0 +1,18 @@
+- name: Install GitLab Runner
+  ansible.builtin.shell: |
+    curl -L --output /tmp/gitlab-runner.deb https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_amd64.deb
+    dpkg -i /tmp/gitlab-runner.deb
+  args:
+    creates: /usr/bin/gitlab-runner
+
+- name: Register runner
+  ansible.builtin.shell: |
+    gitlab-runner register --non-interactive \
+      --url "{{ gitlab_external_url }}" \
+      --registration-token "{{ gitlab_runner_registration_token }}" \
+      --executor "{{ gitlab_runner_executor }}" \
+      --description "$(hostname)-runner" \
+      --tag-list "lab,ubuntu" \
+      --run-untagged="true"
+  args:
+    creates: /etc/gitlab-runner/config.toml

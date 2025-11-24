@@ -1,0 +1,48 @@
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ timezone | default('UTC') }}"
+
+- name: Ensure basic packages
+  ansible.builtin.package:
+    name: "{{ packages_common }}"
+    state: present
+
+- name: Configure UFW baseline
+  ansible.builtin.ufw:
+    state: enabled
+    policy: deny
+
+- name: Allow SSH
+  ansible.builtin.ufw:
+    rule: allow
+    port: 22
+    proto: tcp
+
+- name: Harden sshd_config
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+    backup: yes
+  notify: Restart ssh
+
+- name: Ensure fail2ban enabled
+  ansible.builtin.service:
+    name: fail2ban
+    enabled: true
+    state: started
+
+- name: Enable unattended-upgrades
+  ansible.builtin.apt:
+    name: unattended-upgrades
+    state: present
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Configure automatic updates
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+  when: ansible_facts['os_family'] == 'Debian'

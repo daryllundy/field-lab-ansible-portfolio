@@ -1,0 +1,12 @@
+timezone: America/Los_Angeles
+admin_user: daryl
+ssh_public_keys:
+  - "ssh-ed25519 AAAA...yourkeycomment"
+packages_common:
+  - curl
+  - vim
+  - htop
+  - git
+  - ufw
+  - fail2ban
+unattended_upgrades: true

@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    admin_user: testadmin
+    ssh_public_keys: []
+  roles:
+    - role: users

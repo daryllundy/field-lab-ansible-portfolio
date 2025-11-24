@@ -1,0 +1,7 @@
+- name: Bootstrap nodes
+  hosts: all
+  become: true
+  roles:
+    - base_hardening
+    - users
+    - packages

@@ -1,0 +1,6 @@
+- name: Restart jupyter
+  ansible.builtin.systemd:
+    name: jupyterlab
+    enabled: true
+    state: restarted
+    daemon_reload: true

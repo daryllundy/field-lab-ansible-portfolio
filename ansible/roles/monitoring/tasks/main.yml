@@ -1,0 +1,7 @@
+- name: Install Elastic Agent (as example EDR-ish)
+  ansible.builtin.shell: |
+    curl -L -o /tmp/elastic-agent.tar.gz https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.15.3-linux-x86_64.tar.gz
+    tar -xzf /tmp/elastic-agent.tar.gz -C /opt
+  args:
+    creates: /opt/elastic-agent-8.15.3-linux-x86_64
+  when: ansible_facts['architecture'] == 'x86_64'

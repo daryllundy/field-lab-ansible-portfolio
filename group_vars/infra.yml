@@ -1,0 +1,4 @@
+gitlab_external_url: "https://gitlab.lab.local"
+nfs_export_path: "/srv/nfs"
+restic_repo: "/srv/backup/repo"
+restic_password: "CHANGE_ME"

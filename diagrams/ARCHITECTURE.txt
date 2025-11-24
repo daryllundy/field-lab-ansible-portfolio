@@ -1,0 +1,7 @@
+High-level architecture (to be diagrammed):
+
+- VLAN50: workstations
+- VLAN60: lab_nodes (Pis)
+- VLAN70: runners
+- VLAN40: infra (GitLab, NFS, DNS/DHCP, Wazuh/Elastic)
+- Cloudflare Tunnel/ZTNA (optional) for admin portals

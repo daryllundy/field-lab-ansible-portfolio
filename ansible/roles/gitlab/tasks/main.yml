@@ -1,0 +1,15 @@
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+      - apt-transport-https
+    state: present
+    update_cache: yes
+
+- name: Add GitLab CE repo and install
+  ansible.builtin.shell: |
+    curl -fsSL https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
+    EXTERNAL_URL="{{ gitlab_external_url }}" apt-get install -y gitlab-ce
+  args:
+    creates: /etc/gitlab/gitlab.rb

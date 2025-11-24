@@ -1,0 +1,5 @@
+- name: Storage and backups
+  hosts: infra
+  become: true
+  roles:
+    - storage

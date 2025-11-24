@@ -1,0 +1,2 @@
+- name: Exportfs reload
+  ansible.builtin.shell: exportfs -ra

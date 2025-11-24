@@ -1,0 +1,5 @@
+- name: Disaster Recovery test
+  hosts: infra
+  become: true
+  roles:
+    - dr_test

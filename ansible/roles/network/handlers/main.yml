@@ -1,0 +1,8 @@
+- name: Restart dnsmasq
+  ansible.builtin.service:
+    name: dnsmasq
+    state: restarted
+    enabled: true
+
+- name: Apply netplan
+  ansible.builtin.shell: netplan apply

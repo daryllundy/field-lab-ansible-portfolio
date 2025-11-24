@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    packages_common:
+      - curl
+      - git
+  roles:
+    - role: base_hardening

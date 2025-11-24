@@ -1,0 +1,5 @@
+- name: CIS-lite hardening
+  hosts: all
+  become: true
+  roles:
+    - base_hardening

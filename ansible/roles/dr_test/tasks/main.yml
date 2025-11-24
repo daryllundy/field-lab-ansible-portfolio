@@ -1,0 +1,5 @@
+- name: Create DR test log
+  ansible.builtin.shell: |
+    echo "$(date -Is) DR test start" >> /var/log/dr-test.log
+    echo "Simulating restore validation..." >> /var/log/dr-test.log
+    echo "$(date -Is) DR test end" >> /var/log/dr-test.log

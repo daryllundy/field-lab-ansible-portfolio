@@ -1,6 +1,11 @@
+- name: Download code-server install script
+  ansible.builtin.get_url:
+    url: https://code-server.dev/install.sh
+    dest: /tmp/code-server-install.sh
+    mode: '0755'
+
 - name: Install VS Code Server (code-server)
-  ansible.builtin.shell: |
-    curl -fsSL https://code-server.dev/install.sh | sh
+  ansible.builtin.command: /tmp/code-server-install.sh
   args:
     creates: /usr/bin/code-server
 

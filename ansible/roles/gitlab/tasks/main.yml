@@ -5,11 +5,23 @@
       - curl
       - apt-transport-https
     state: present
-    update_cache: yes
+    update_cache: true
 
-- name: Add GitLab CE repo and install
-  ansible.builtin.shell: |
-    curl -fsSL https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
-    EXTERNAL_URL="{{ gitlab_external_url }}" apt-get install -y gitlab-ce
+- name: Download GitLab repository setup script
+  ansible.builtin.get_url:
+    url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+    dest: /tmp/gitlab-repo-setup.sh
+    mode: '0755'
+
+- name: Run GitLab repository setup script
+  ansible.builtin.command: /tmp/gitlab-repo-setup.sh
   args:
-    creates: /etc/gitlab/gitlab.rb
+    creates: /etc/apt/sources.list.d/gitlab_gitlab-ce.list
+
+- name: Install GitLab CE
+  ansible.builtin.apt:
+    name: gitlab-ce
+    state: present
+    update_cache: true
+  environment:
+    EXTERNAL_URL: "{{ gitlab_external_url }}"

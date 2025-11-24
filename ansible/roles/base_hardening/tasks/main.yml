@@ -8,12 +8,12 @@
     state: present
 
 - name: Configure UFW baseline
-  ansible.builtin.ufw:
+  community.general.ufw:
     state: enabled
     policy: deny
 
 - name: Allow SSH
-  ansible.builtin.ufw:
+  community.general.ufw:
     rule: allow
     port: 22
     proto: tcp
@@ -24,7 +24,7 @@
     regexp: "^#?PasswordAuthentication"
     line: "PasswordAuthentication no"
     state: present
-    backup: yes
+    backup: true
   notify: Restart ssh
 
 - name: Ensure fail2ban enabled
@@ -45,4 +45,5 @@
     content: |
       APT::Periodic::Update-Package-Lists "1";
       APT::Periodic::Unattended-Upgrade "1";
+    mode: '0644'
   when: ansible_facts['os_family'] == 'Debian'

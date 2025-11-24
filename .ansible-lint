@@ -1,0 +1,22 @@
+---
+# .ansible-lint configuration
+profile: moderate
+
+# Path configuration
+exclude_paths:
+  - .git/
+  - .github/
+  - .venv/
+  - venv/
+
+# Skip certain rules that may be overly strict for this use case
+skip_list:
+  - role-name  # Allow custom role names
+  - var-naming[no-role-prefix]  # Allow variables without role prefix
+  - galaxy[no-changelog]  # Don't require changelogs for internal roles
+
+# Enable offline mode (no galaxy dependency checks)
+offline: true
+
+# Use the ansible roles path from ansible.cfg
+rulesdir: []

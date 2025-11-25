@@ -1,5 +1,26 @@
-- name: Create DR test log
-  ansible.builtin.shell: |
-    echo "$(date -Is) DR test start" >> /var/log/dr-test.log
-    echo "Simulating restore validation..." >> /var/log/dr-test.log
-    echo "$(date -Is) DR test end" >> /var/log/dr-test.log
+- name: Get current timestamp
+  ansible.builtin.command: date -Is
+  register: current_date
+  changed_when: false
+
+- name: Log DR test start
+  ansible.builtin.lineinfile:
+    path: /var/log/dr-test.log
+    line: "{{ current_date.stdout }} DR test start"
+    create: true
+    mode: "0644"
+
+- name: Log DR test simulation
+  ansible.builtin.lineinfile:
+    path: /var/log/dr-test.log
+    line: "Simulating restore validation..."
+
+- name: Get end timestamp
+  ansible.builtin.command: date -Is
+  register: end_date
+  changed_when: false
+
+- name: Log DR test end
+  ansible.builtin.lineinfile:
+    path: /var/log/dr-test.log
+    line: "{{ end_date.stdout }} DR test end"

@@ -4,7 +4,7 @@
       - dnsmasq
       - unbound
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Configure dnsmasq (DHCP/DNS)
   ansible.builtin.copy:
@@ -14,6 +14,7 @@
       dhcp-range=192.168.50.100,192.168.50.200,12h
       dhcp-range=192.168.60.100,192.168.60.200,12h
       dhcp-option=option:dns-server,192.168.40.40
+    mode: "0644"
   notify: Restart dnsmasq
 
 - name: Configure VLAN example (documentation only)
@@ -35,4 +36,5 @@
             id: 60
             link: eno1
             addresses: [192.168.60.1/24]
+    mode: "0600"
   notify: Apply netplan

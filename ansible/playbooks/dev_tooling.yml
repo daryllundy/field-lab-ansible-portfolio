@@ -2,10 +2,11 @@
   hosts: workstations:runners:infra
   become: true
   roles:
-    - {
-        role: gitlab,
-        when: "'gitlab' in group_names or inventory_hostname == 'gitlab'",
-      }
-    - { role: gitlab_runner, when: "'runners' in group_names" }
-    - { role: vscode_server, when: "'workstations' in group_names" }
-    - { role: jupyter, when: "'workstations' in group_names" }
+    - role: gitlab
+      when: "'gitlab' in group_names or inventory_hostname == 'gitlab'"
+    - role: gitlab_runner
+      when: "'runners' in group_names"
+    - role: vscode_server
+      when: "'workstations' in group_names"
+    - role: jupyter
+      when: "'workstations' in group_names"

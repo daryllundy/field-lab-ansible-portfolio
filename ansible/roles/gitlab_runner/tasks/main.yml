@@ -2,7 +2,7 @@
   ansible.builtin.get_url:
     url: https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_amd64.deb
     dest: /tmp/gitlab-runner.deb
-    mode: '0644'
+    mode: "0644"
 
 - name: Install GitLab Runner
   ansible.builtin.apt:

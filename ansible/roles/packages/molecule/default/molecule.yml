@@ -13,5 +13,27 @@ platforms:
     cgroupns_mode: host
 provisioner:
   name: ansible
+  config_options:
+    defaults:
+      host_key_checking: false
+      interpreter_python: auto_silent
 verifier:
   name: testinfra
+lint: |
+  set -e
+  ansible-lint ansible/
+  yamllint .
+scenario:
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy

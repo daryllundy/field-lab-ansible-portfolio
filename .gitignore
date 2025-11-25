@@ -22,5 +22,6 @@ logs/
 *.tfstate
 *.tfstate.*
 crash.log
-RESUME.md.history/
+RESUME.md
+.history/
 .kiro/

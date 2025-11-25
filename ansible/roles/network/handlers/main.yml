@@ -5,4 +5,5 @@
     enabled: true
 
 - name: Apply netplan
-  ansible.builtin.shell: netplan apply
+  ansible.builtin.command: netplan apply
+  changed_when: true

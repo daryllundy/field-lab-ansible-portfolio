@@ -1,0 +1,21 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Create gitlab-runner directory
+      file:
+        path: /etc/gitlab-runner
+        state: directory
+
+    - name: Create dummy config.toml to skip registration
+      copy:
+        dest: /etc/gitlab-runner/config.toml
+        content: |
+          concurrent = 1
+          check_interval = 0
+
+          [[runners]]
+            name = "instance-runner"
+            url = "https://gitlab.lab.local"
+            token = "REPLACE_ME"
+            executor = "docker"

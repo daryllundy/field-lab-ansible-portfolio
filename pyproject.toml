@@ -1,0 +1,26 @@
+[project]
+name = "field-lab-ansible-portfolio"
+version = "0.1.0"
+description = "Ansible infrastructure portfolio with validation testing"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "ansible>=9.0.0",
+    "ansible-lint>=6.0.0",
+    "yamllint>=1.30.0",
+    "molecule>=6.0.0",
+    "molecule-docker>=2.0.0",
+    "pytest>=7.0.0",
+    "pytest-testinfra>=10.0.0",
+    "hypothesis>=6.0.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
+markers = [
+    "property: marks tests as property-based tests (deselect with '-m \"not property\"')",
+]

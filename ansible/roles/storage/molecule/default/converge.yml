@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    nfs_export_path: "/srv/nfs/lab"
+    restic_repo: "/srv/restic/repo"
+    restic_password: "password"
+  tasks:
+    - name: "Include storage"
+      include_role:
+        name: "storage"

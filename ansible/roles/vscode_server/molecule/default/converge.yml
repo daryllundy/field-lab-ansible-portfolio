@@ -1,0 +1,15 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    admin_user: "molecule"
+  tasks:
+    - name: Create admin user
+      user:
+        name: "{{ admin_user }}"
+        shell: /bin/bash
+        state: present
+
+    - name: "Include vscode_server"
+      include_role:
+        name: "vscode_server"

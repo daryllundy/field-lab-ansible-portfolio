@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    gitlab_external_url: "https://gitlab.lab.local"
+    gitlab_runner_registration_token: "REPLACE_ME"
+    gitlab_runner_executor: "docker"
+  tasks:
+    - name: "Include gitlab_runner"
+      include_role:
+        name: "gitlab_runner"

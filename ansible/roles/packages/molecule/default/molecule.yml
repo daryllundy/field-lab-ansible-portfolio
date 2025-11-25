@@ -15,7 +15,7 @@ provisioner:
   name: ansible
   config_options:
     defaults:
-      host_key_checking: False
+      host_key_checking: false
       interpreter_python: auto_silent
 verifier:
   name: testinfra

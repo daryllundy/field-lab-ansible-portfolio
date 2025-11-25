@@ -6,7 +6,7 @@ YAMLLINT := yamllint
 .PHONY: help
 help:
 	@echo "Targets:"
-	@echo "  setup           - Create Python venv and install tooling"
+	@echo "  setup           - Create Python venv and install tooling using uv"
 	@echo "  lint            - Run ansible-lint and yamllint"
 	@echo "  ping            - Ansible ping all hosts"
 	@echo "  bootstrap       - Apply base setup to all nodes"
@@ -16,51 +16,51 @@ help:
 	@echo "  storage         - Configure NFS + restic backups"
 	@echo "  monitoring      - Deploy Wazuh/Elastic Agent"
 	@echo "  dr-test         - Run backup restore test"
+	@echo "  test            - Run Molecule tests for all roles"
 	@echo "  docs-serve      - Serve docs with mkdocs if present"
 
 .PHONY: setup
 setup:
-	python3 -m venv .venv
-	. .venv/bin/activate && pip install --upgrade pip
-	. .venv/bin/activate && pip install ansible ansible-lint yamllint molecule molecule-docker pytest-testinfra
+	uv venv
+	uv pip install .
 	@echo "Run: source .venv/bin/activate"
 
 .PHONY: lint
 lint:
-	. .venv/bin/activate && $(LINT) ansible/
-	. .venv/bin/activate && $(YAMLLINT) ansible/ group_vars/ host_vars/ || true
+	uv run $(LINT) ansible/
+	uv run $(YAMLLINT) ansible/ group_vars/ host_vars/ || true
 
 .PHONY: ping
 ping:
-	. .venv/bin/activate && ansible -i inventories/lab.ini all -m ping
+	uv run ansible -i inventories/lab.ini all -m ping
 
 .PHONY: bootstrap
 bootstrap:
-	. .venv/bin/activate && $(ANSIBLE) -i inventories/lab.ini playbooks/bootstrap.yml -K
+	uv run $(ANSIBLE) -i inventories/lab.ini playbooks/bootstrap.yml -K
 
 .PHONY: harden
 harden:
-	. .venv/bin/activate && $(ANSIBLE) -i inventories/lab.ini playbooks/hardening.yml -K
+	uv run $(ANSIBLE) -i inventories/lab.ini playbooks/hardening.yml -K
 
 .PHONY: dev-tools
 dev-tools:
-	. .venv/bin/activate && $(ANSIBLE) -i inventories/lab.ini playbooks/dev_tooling.yml -K
+	uv run $(ANSIBLE) -i inventories/lab.ini playbooks/dev_tooling.yml -K
 
 .PHONY: network
 network:
-	. .venv/bin/activate && $(ANSIBLE) -i inventories/lab.ini playbooks/network.yml -K
+	uv run $(ANSIBLE) -i inventories/lab.ini playbooks/network.yml -K
 
 .PHONY: storage
 storage:
-	. .venv/bin/activate && $(ANSIBLE) -i inventories/lab.ini playbooks/storage.yml -K
+	uv run $(ANSIBLE) -i inventories/lab.ini playbooks/storage.yml -K
 
 .PHONY: monitoring
 monitoring:
-	. .venv/bin/activate && $(ANSIBLE) -i inventories/lab.ini playbooks/monitoring.yml -K
+	uv run $(ANSIBLE) -i inventories/lab.ini playbooks/monitoring.yml -K
 
 .PHONY: dr-test
 dr-test:
-	. .venv/bin/activate && $(ANSIBLE) -i inventories/lab.ini playbooks/dr_test.yml -K
+	uv run $(ANSIBLE) -i inventories/lab.ini playbooks/dr_test.yml -K
 
 .PHONY: docs-serve
 docs-serve:
@@ -68,6 +68,14 @@ docs-serve:
 
 .PHONY: test
 test:
-	. .venv/bin/activate && cd ansible/roles/base_hardening && molecule test
-	. .venv/bin/activate && cd ansible/roles/users && molecule test
-	. .venv/bin/activate && cd ansible/roles/packages && molecule test
+	uv run bash -c "cd ansible/roles/base_hardening && molecule test"
+	uv run bash -c "cd ansible/roles/users && molecule test"
+	uv run bash -c "cd ansible/roles/packages && molecule test"
+	uv run bash -c "cd ansible/roles/gitlab && molecule test"
+	uv run bash -c "cd ansible/roles/gitlab_runner && molecule test"
+	uv run bash -c "cd ansible/roles/vscode_server && molecule test"
+	uv run bash -c "cd ansible/roles/jupyter && molecule test"
+	uv run bash -c "cd ansible/roles/network && molecule test"
+	uv run bash -c "cd ansible/roles/storage && molecule test"
+	uv run bash -c "cd ansible/roles/monitoring && molecule test"
+	uv run bash -c "cd ansible/roles/dr_test && molecule test"

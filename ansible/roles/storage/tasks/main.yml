@@ -4,7 +4,7 @@
       - nfs-kernel-server
       - restic
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Ensure export path
   ansible.builtin.file:
@@ -19,8 +19,9 @@
   notify: Exportfs reload
 
 - name: Initialize restic repo
-  ansible.builtin.shell: |
-    export RESTIC_PASSWORD="{{ restic_password }}"
-    restic init --repo "{{ restic_repo }}"
+  ansible.builtin.command:
+    cmd: restic init --repo "{{ restic_repo }}"
+  environment:
+    RESTIC_PASSWORD: "{{ restic_password }}"
   args:
     creates: "{{ restic_repo }}/config"

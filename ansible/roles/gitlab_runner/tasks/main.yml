@@ -2,7 +2,7 @@
   ansible.builtin.get_url:
     url: https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_amd64.deb
     dest: /tmp/gitlab-runner.deb
-    mode: '0644'
+    mode: "0644"
 
 - name: Install GitLab Runner
   ansible.builtin.apt:
@@ -16,13 +16,6 @@
 
 - name: Register runner
   ansible.builtin.command:
-    cmd: >
-      gitlab-runner register --non-interactive
-      --url "{{ gitlab_external_url }}"
-      --registration-token "{{ gitlab_runner_registration_token }}"
-      --executor "{{ gitlab_runner_executor }}"
-      --description "{{ runner_hostname.stdout }}-runner"
-      --tag-list "lab,ubuntu"
-      --run-untagged="true"
+    cmd: gitlab-runner register --non-interactive --url "{{ gitlab_external_url }}" --registration-token "{{ gitlab_runner_registration_token }}" --executor "{{ gitlab_runner_executor }}" --description "{{ runner_hostname.stdout }}-runner" --tag-list "lab,ubuntu" --run-untagged="true"
   args:
     creates: /etc/gitlab-runner/config.toml

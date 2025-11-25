@@ -13,6 +13,8 @@
 
 This repository contains a complete Ansible-driven lab environment designed to mirror a real-world R&D SysAdmin setup. It automates the provisioning of developer workstations, CI/CD runners, and core infrastructure services, emphasizing security best practices (CIS-lite) and disaster recovery.
 
+**GitHub Repository:** [https://github.com/daryllundy/field-lab-ansible-portfolio](https://github.com/daryllundy/field-lab-ansible-portfolio)
+
 **Key Features:**
 - **Automated Hardening**: CIS-lite baseline, SSH hardening, UFW firewall, and Fail2Ban.
 - **Developer Platform**: Automated deployment of VS Code Server and JupyterLab for R&D workflows.

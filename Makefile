@@ -15,7 +15,7 @@ help:
 	@echo "  dev-tools       - Install GitLab CE, Runner, VS Code Server, Jupyter"
 	@echo "  network         - Configure VLANs, DHCP/DNS (lab)"
 	@echo "  storage         - Configure NFS + restic backups"
-	@echo "  monitoring      - Deploy Wazuh/Elastic Agent"
+	@echo "  monitoring      - Deploy Elastic Agent"
 	@echo "  dr-test         - Run backup restore test"
 	@echo "  test            - Run Molecule tests for all roles"
 	@echo "  docs-serve      - Serve docs with mkdocs if present"

@@ -141,7 +141,7 @@ Everything below this line is the project-specific context. Edit freely as the c
 
 | VLAN | Purpose | Hosts |
 |------|---------|-------|
-| 40 (Infra) | GitLab CE, NFS, DNS/DHCP, Elastic monitoring | gitlab, nfs, wazuh, dnsdhcp |
+| 40 (Infra) | GitLab CE, NFS, DNS/DHCP, Elastic monitoring | gitlab, nfs, elastic, dnsdhcp |
 | 50 (Workstations) | Ubuntu workstations with VS Code Server + JupyterLab | ubuntu-ws-1, ubuntu-ws-2 |
 | 60 (Lab Nodes) | Raspberry Pi Ubuntu nodes | pi-1, pi-2 |
 | 70 (Runners) | GitLab CI/CD runners | runner-1, runner-2 |

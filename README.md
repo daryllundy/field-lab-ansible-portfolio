@@ -16,7 +16,7 @@ graph TD
         GitLab[GitLab CE]
         NFS[NFS Server]
         DNS[DNS/DHCP]
-        Wazuh[Wazuh/Elastic]
+        Elastic[Elastic Agent]
     end
 
     subgraph "VLAN 50: Workstations"

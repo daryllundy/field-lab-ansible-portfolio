@@ -1,2 +1,8 @@
 vscode_server: true
 jupyter_install: true
+packages_extra:
+  - build-essential
+  - python3-pip
+  - python3-venv
+  - tmux
+  - jq

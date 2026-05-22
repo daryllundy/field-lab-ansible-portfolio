@@ -1,4 +1,1 @@
-packages_common:
-  - curl
-  - vim
-  - git
+packages_extra: []

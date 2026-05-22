@@ -18,7 +18,7 @@ jobs:
       - name: ansible-lint
         run: ansible-lint ansible/
       - name: yamllint
-        run: yamllint ansible/ group_vars/ host_vars/ || true
+        run: yamllint ansible/ group_vars/ host_vars/
 
   syntax-check:
     runs-on: ubuntu-latest

@@ -1,3 +1,4 @@
+---
 - name: Restart dnsmasq
   ansible.builtin.service:
     name: dnsmasq

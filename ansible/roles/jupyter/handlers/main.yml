@@ -1,3 +1,4 @@
+---
 - name: Restart jupyter
   ansible.builtin.systemd:
     name: jupyterlab

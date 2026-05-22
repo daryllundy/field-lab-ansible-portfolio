@@ -1,3 +1,4 @@
+---
 timezone: UTC
 packages_common:
   - curl

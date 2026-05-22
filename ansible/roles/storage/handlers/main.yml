@@ -1,3 +1,4 @@
+---
 - name: Exportfs reload
   ansible.builtin.command: exportfs -ra
   changed_when: true

@@ -1,3 +1,4 @@
+---
 - name: Ensure admin user exists
   ansible.builtin.user:
     name: "{{ admin_user }}"

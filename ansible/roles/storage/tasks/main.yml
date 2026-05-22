@@ -1,3 +1,4 @@
+---
 - name: Install NFS server and restic
   ansible.builtin.apt:
     name:

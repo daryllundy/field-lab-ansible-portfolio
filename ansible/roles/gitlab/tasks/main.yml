@@ -1,3 +1,4 @@
+---
 - name: Install dependencies
   ansible.builtin.apt:
     name:

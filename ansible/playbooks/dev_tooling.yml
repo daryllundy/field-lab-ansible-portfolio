@@ -1,3 +1,4 @@
+---
 - name: Developer tooling
   hosts: workstations:runners:infra
   become: true

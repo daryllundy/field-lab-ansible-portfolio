@@ -1,3 +1,4 @@
+---
 - name: Bootstrap nodes
   hosts: all
   become: true

@@ -1,3 +1,4 @@
+---
 - name: Monitoring and EDR-ish telemetry
   hosts: all
   become: true

@@ -1,24 +1,25 @@
+---
 - name: Download Elastic Agent
   ansible.builtin.get_url:
-    url: "https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-{{ elastic_agent_version }}-linux-x86_64.tar.gz"
-    dest: "/tmp/elastic-agent-{{ elastic_agent_version }}-linux-x86_64.tar.gz"
+    url: "{{ elastic_agent_download_base }}/{{ elastic_agent_filename }}"
+    dest: "/tmp/{{ elastic_agent_filename }}"
     mode: "0644"
   when: ansible_facts['architecture'] == 'x86_64'
   tags: [monitoring]
 
 - name: Extract Elastic Agent
   ansible.builtin.unarchive:
-    src: "/tmp/elastic-agent-{{ elastic_agent_version }}-linux-x86_64.tar.gz"
+    src: "/tmp/{{ elastic_agent_filename }}"
     dest: /opt
     remote_src: true
-    creates: "/opt/elastic-agent-{{ elastic_agent_version }}-linux-x86_64"
+    creates: "/opt/elastic-agent-{{ elastic_agent_version }}-{{ elastic_agent_arch }}"
   when: ansible_facts['architecture'] == 'x86_64'
   tags: [monitoring]
 
 - name: Install Elastic Agent
   ansible.builtin.command:
     cmd: >
-      /opt/elastic-agent-{{ elastic_agent_version }}-linux-x86_64/elastic-agent install
+      /opt/elastic-agent-{{ elastic_agent_version }}-{{ elastic_agent_arch }}/elastic-agent install
       --non-interactive
       --url="{{ fleet_server_url }}"
       --enrollment-token="{{ fleet_enrollment_token }}"

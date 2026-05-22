@@ -1,3 +1,4 @@
+---
 - name: Create dr-test source directory
   ansible.builtin.file:
     path: /tmp/dr-test-source

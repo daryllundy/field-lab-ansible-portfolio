@@ -1,3 +1,4 @@
+---
 gitlab_external_url: "https://gitlab.example.com"
 gitlab_runner_registration_token: ""
 gitlab_runner_executor: "docker"

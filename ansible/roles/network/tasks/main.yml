@@ -1,3 +1,4 @@
+---
 - name: Install dnsmasq and unbound
   ansible.builtin.apt:
     name:

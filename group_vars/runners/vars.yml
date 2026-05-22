@@ -1,3 +1,4 @@
+---
 gitlab_runner_registration_token: "{{ vault_gitlab_runner_token }}"
 gitlab_runner_executor: "docker"
 packages_extra:

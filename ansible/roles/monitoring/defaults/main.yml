@@ -1,3 +1,7 @@
+---
 elastic_agent_version: "8.15.3"
+elastic_agent_arch: "linux-x86_64"
+elastic_agent_filename: "elastic-agent-{{ elastic_agent_version }}-{{ elastic_agent_arch }}.tar.gz"
+elastic_agent_download_base: "https://artifacts.elastic.co/downloads/beats/elastic-agent"
 fleet_server_url: ""
 fleet_enrollment_token: ""

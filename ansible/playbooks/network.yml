@@ -1,3 +1,4 @@
+---
 - name: Lab network services
   hosts: dnsdhcp
   become: true

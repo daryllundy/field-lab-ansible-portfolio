@@ -19,8 +19,9 @@ node_modules/
 .venv/
 .vault_pass
 
-# Logs
-logs/
+# Logs — keep the dir tracked via .gitkeep, ignore its contents
+logs/*
+!logs/.gitkeep
 *.log
 
 # Terraform (if added later)

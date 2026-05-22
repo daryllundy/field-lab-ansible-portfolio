@@ -2,6 +2,7 @@ SHELL := /bin/bash
 ANSIBLE := ansible-playbook
 LINT := ansible-lint
 YAMLLINT := yamllint
+LOG_TIMESTAMP := $(shell date +%Y%m%d-%H%M%S)
 
 .PHONY: help
 help:
@@ -18,6 +19,10 @@ help:
 	@echo "  dr-test         - Run backup restore test"
 	@echo "  test            - Run Molecule tests for all roles"
 	@echo "  docs-serve      - Serve docs with mkdocs if present"
+	@echo ""
+	@echo "Logged variants: append -logged to any deployment target to"
+	@echo "tee output to logs/<target>-<timestamp>.log"
+	@echo "  e.g. 'make bootstrap-logged'  or  'make harden-logged'"
 
 .PHONY: setup
 setup:
@@ -65,6 +70,10 @@ dr-test:
 .PHONY: docs-serve
 docs-serve:
 	@if command -v mkdocs >/dev/null 2>&1; then mkdocs serve; else echo "Install mkdocs to use this"; fi
+
+%-logged:
+	@mkdir -p logs
+	@$(MAKE) $* 2>&1 | tee logs/$*-$(LOG_TIMESTAMP).log
 
 .PHONY: test
 test:

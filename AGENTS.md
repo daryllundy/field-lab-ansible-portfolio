@@ -19,6 +19,9 @@ uv run pytest
 # Syntax check — read-only, does not contact hosts
 for pb in ansible/playbooks/*.yml; do ansible-playbook --syntax-check "$pb"; done
 
+# Install Ansible collection deps (declarative)
+ansible-galaxy collection install -r ansible/requirements.yml
+
 # Read vault (demo password: labvault)
 ansible-vault view group_vars/infra/vault.yml --vault-password-file <(echo 'labvault')
 ansible-vault view group_vars/runners/vault.yml --vault-password-file <(echo 'labvault')
@@ -52,7 +55,9 @@ Both must pass before committing. If lint fails, fix the violation — do not su
 
 ```
 site.yml                            # top-level entrypoint: imports all playbooks in order
+Makefile                            # %-logged pattern target tees any deploy to logs/<target>-<ts>.log
 ansible/
+  requirements.yml                  # collection deps (community.general, ansible.posix)
   playbooks/                        # individual playbooks (bootstrap → hardening → network → storage → dev_tooling → monitoring → dr_test)
   roles/
     <role>/
@@ -64,13 +69,16 @@ ansible/
 inventories/lab.ini                 # groups: workstations, lab_nodes, runners, infra
 group_vars/
   all.yml                           # common: timezone, admin_user, ssh_public_keys, packages_common
-  workstations.yml                  # vscode_server, jupyter_install
+  workstations.yml                  # vscode_server, jupyter_install, packages_extra
   infra/
-    vars.yml                        # gitlab_external_url, nfs paths; restic_password → {{ vault_restic_password }}
+    vars.yml                        # gitlab_external_url, nfs paths, packages_extra; restic_password → {{ vault_restic_password }}
     vault.yml                       # AES256-encrypted
   runners/
-    vars.yml                        # gitlab_runner_executor; token → {{ vault_gitlab_runner_token }}
+    vars.yml                        # gitlab_runner_executor, packages_extra; token → {{ vault_gitlab_runner_token }}
     vault.yml                       # AES256-encrypted
+host_vars/
+  gitlab.yml                        # host-level override example (gitlab_external_url)
+logs/                               # tee'd Make target output lands here (.gitkeep pins the dir)
 tests/                              # pytest: config validation + Hypothesis property tests
 ```
 
@@ -80,7 +88,7 @@ tests/                              # pytest: config validation + Hypothesis pro
 |------|--------------------------------------|
 | `base_hardening` | `timezone`, `packages_common`, `unattended_upgrades` |
 | `users` | `admin_user`, `ssh_public_keys` |
-| `packages` | `packages_common` |
+| `packages` | `packages_extra` (per-group package list, empty by default) |
 | `gitlab` | `gitlab_external_url` |
 | `gitlab_runner` | `gitlab_external_url`, `gitlab_runner_registration_token`, `gitlab_runner_executor` |
 | `vscode_server` | `admin_user`, `vscode_server_port` |
@@ -91,6 +99,18 @@ tests/                              # pytest: config validation + Hypothesis pro
 | `dr_test` | `restic_repo`, `restic_password` |
 
 The `monitoring` role gates install/service on `fleet_server_url` being non-empty. The `dr_test` role writes a canary file, backs it up, restores to a temp dir, verifies the canary, then cleans up — fails loudly if the restore is incomplete.
+
+## Logged Make targets
+
+Any deployment target can be suffixed with `-logged` to tee output to `logs/<target>-<timestamp>.log`. Examples:
+
+```bash
+make bootstrap-logged          # logs/bootstrap-20260522-100534.log
+make harden-logged
+make dev-tools-logged
+```
+
+Implementation is a `%-logged` pattern rule in the Makefile. `logs/` is tracked via `.gitkeep`; its contents are gitignored.
 
 ## Hardening playbook
 

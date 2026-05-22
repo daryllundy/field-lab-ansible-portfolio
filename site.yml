@@ -1,0 +1,7 @@
+---
+- import_playbook: ansible/playbooks/bootstrap.yml
+- import_playbook: ansible/playbooks/hardening.yml
+- import_playbook: ansible/playbooks/network.yml
+- import_playbook: ansible/playbooks/storage.yml
+- import_playbook: ansible/playbooks/dev_tooling.yml
+- import_playbook: ansible/playbooks/monitoring.yml

@@ -5,36 +5,20 @@
       - unbound
     state: present
     update_cache: true
+  tags: [network, packages]
 
 - name: Configure dnsmasq (DHCP/DNS)
-  ansible.builtin.copy:
+  ansible.builtin.template:
+    src: dnsmasq-lab.conf.j2
     dest: /etc/dnsmasq.d/lab.conf
-    content: |
-      domain=lab.local
-      dhcp-range=192.168.50.100,192.168.50.200,12h
-      dhcp-range=192.168.60.100,192.168.60.200,12h
-      dhcp-option=option:dns-server,192.168.40.40
     mode: "0644"
   notify: Restart dnsmasq
+  tags: [network, dns, dhcp]
 
-- name: Configure VLAN example (documentation only)
-  ansible.builtin.copy:
+- name: Configure VLAN interfaces via netplan
+  ansible.builtin.template:
+    src: netplan-vlans.yaml.j2
     dest: /etc/netplan/99-lab-vlans.yaml
-    content: |
-      network:
-        version: 2
-        renderer: networkd
-        ethernets:
-          eno1:
-            dhcp4: no
-        vlans:
-          vlan50:
-            id: 50
-            link: eno1
-            addresses: [192.168.50.1/24]
-          vlan60:
-            id: 60
-            link: eno1
-            addresses: [192.168.60.1/24]
     mode: "0600"
   notify: Apply netplan
+  tags: [network, vlan]

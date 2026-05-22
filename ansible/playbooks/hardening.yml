@@ -3,3 +3,53 @@
   become: true
   roles:
     - base_hardening
+  tasks:
+    - name: Apply CIS sysctl parameters
+      ansible.posix.sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        sysctl_file: /etc/sysctl.d/99-cis.conf
+        reload: true
+      loop:
+        - { key: kernel.randomize_va_space, value: "2" }
+        - { key: fs.suid_dumpable, value: "0" }
+        - { key: net.ipv4.ip_forward, value: "0" }
+        - { key: net.ipv4.conf.all.accept_redirects, value: "0" }
+        - { key: net.ipv4.conf.all.send_redirects, value: "0" }
+        - { key: net.ipv4.conf.all.accept_source_route, value: "0" }
+        - { key: net.ipv4.conf.all.log_martians, value: "1" }
+        - { key: net.ipv4.tcp_syncookies, value: "1" }
+        - { key: net.ipv6.conf.all.accept_redirects, value: "0" }
+        - { key: net.ipv6.conf.all.disable_ipv6, value: "1" }
+      tags: [hardening, sysctl, security]
+
+    - name: Install auditd
+      ansible.builtin.apt:
+        name:
+          - auditd
+          - audispd-plugins
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+      tags: [hardening, audit, security]
+
+    - name: Configure core audit rules
+      ansible.builtin.copy:
+        dest: /etc/audit/rules.d/99-cis.rules
+        mode: "0640"
+        content: |
+          # CIS-lite audit rules
+          -w /etc/passwd -p wa -k identity
+          -w /etc/shadow -p wa -k identity
+          -w /etc/sudoers -p wa -k sudoers
+          -w /var/log/auth.log -p wa -k auth
+          -a always,exit -F arch=b64 -S execve -k exec
+      notify: Restart auditd
+      tags: [hardening, audit, security]
+
+    - name: Ensure auditd is running
+      ansible.builtin.service:
+        name: auditd
+        state: started
+        enabled: true
+      tags: [hardening, audit, security]

@@ -5,6 +5,7 @@
     append: true
     shell: /bin/bash
     state: present
+  tags: [users, security]
 
 - name: Authorize SSH keys for admin
   ansible.posix.authorized_key:
@@ -12,3 +13,4 @@
     key: "{{ item }}"
     state: present
   loop: "{{ ssh_public_keys }}"
+  tags: [users, ssh, security]

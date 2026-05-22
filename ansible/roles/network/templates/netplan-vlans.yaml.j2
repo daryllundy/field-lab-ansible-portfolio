@@ -1,0 +1,23 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    {{ uplink_interface }}:
+      dhcp4: false
+  vlans:
+    vlan50:
+      id: 50
+      link: {{ uplink_interface }}
+      addresses: [192.168.50.1/24]
+    vlan60:
+      id: 60
+      link: {{ uplink_interface }}
+      addresses: [192.168.60.1/24]
+    vlan70:
+      id: 70
+      link: {{ uplink_interface }}
+      addresses: [192.168.70.1/24]
+    vlan40:
+      id: 40
+      link: {{ uplink_interface }}
+      addresses: [192.168.40.1/24]

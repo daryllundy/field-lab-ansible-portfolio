@@ -3,16 +3,19 @@
     url: https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_amd64.deb
     dest: /tmp/gitlab-runner.deb
     mode: "0644"
+  tags: [runner]
 
 - name: Install GitLab Runner
   ansible.builtin.apt:
     deb: /tmp/gitlab-runner.deb
     state: present
+  tags: [runner, packages]
 
 - name: Get hostname for runner description
   ansible.builtin.command: hostname
   register: runner_hostname
   changed_when: false
+  tags: [runner]
 
 - name: Register runner
   ansible.builtin.command:
@@ -26,3 +29,4 @@
       --run-untagged="true"
   args:
     creates: /etc/gitlab-runner/config.toml
+  tags: [runner]

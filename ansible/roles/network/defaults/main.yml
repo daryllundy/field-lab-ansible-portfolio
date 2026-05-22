@@ -1,0 +1,6 @@
+lab_domain: lab.local
+dhcp_ranges:
+  - "192.168.50.100,192.168.50.200,12h"
+  - "192.168.60.100,192.168.60.200,12h"
+dns_server: "192.168.40.40"
+uplink_interface: eno1

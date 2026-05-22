@@ -15,36 +15,18 @@ def get_targets(makefile_content):
     return targets
 
 def test_makefile_setup_target(makefile_content):
-    """Property 42: Makefile setup target."""
-    targets = get_targets(makefile_content)
-    assert "setup" in targets, "Makefile missing 'setup' target"
+    assert "setup" in get_targets(makefile_content)
 
 def test_makefile_lint_target(makefile_content):
-    """Property 43: Makefile lint target."""
-    targets = get_targets(makefile_content)
-    assert "lint" in targets, "Makefile missing 'lint' target"
+    assert "lint" in get_targets(makefile_content)
 
 def test_makefile_test_target(makefile_content):
-    """Property 44: Makefile test target."""
-    targets = get_targets(makefile_content)
-    assert "test" in targets, "Makefile missing 'test' target"
+    assert "test" in get_targets(makefile_content)
 
 def test_makefile_deployment_targets(makefile_content):
-    """Property 45: Makefile deployment targets."""
     targets = get_targets(makefile_content)
-    required_targets = [
-        "bootstrap",
-        "harden",
-        "dev-tools",
-        "network",
-        "storage",
-        "monitoring",
-        "dr-test",
-    ]
-    for target in required_targets:
+    for target in ["bootstrap", "harden", "dev-tools", "network", "storage", "monitoring", "dr-test"]:
         assert target in targets, f"Makefile missing '{target}' target"
 
 def test_makefile_ping_target(makefile_content):
-    """Property 46: Makefile ping target."""
-    targets = get_targets(makefile_content)
-    assert "ping" in targets, "Makefile missing 'ping' target"
+    assert "ping" in get_targets(makefile_content)

@@ -3,10 +3,12 @@
     name: python3-pip
     state: present
     update_cache: true
+  tags: [jupyter, devtools, packages]
 
 - name: Install JupyterLab
   ansible.builtin.pip:
     name: jupyterlab
+  tags: [jupyter, devtools]
 
 - name: Create systemd service for JupyterLab
   ansible.builtin.copy:
@@ -20,9 +22,10 @@
       [Service]
       Type=simple
       User={{ admin_user }}
-      ExecStart=/usr/bin/jupyter lab --ip=0.0.0.0 --no-browser
+      ExecStart=/usr/bin/jupyter lab --ip={{ jupyter_ip }} --port={{ jupyter_port }} --no-browser
       Restart=always
 
       [Install]
       WantedBy=multi-user.target
   notify: Restart jupyter
+  tags: [jupyter, devtools]

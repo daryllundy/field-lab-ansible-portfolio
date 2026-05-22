@@ -4,11 +4,19 @@ import testinfra.utils.ansible_runner
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
 
+ELASTIC_AGENT_VERSION = "8.15.3"
+
+
 def test_elastic_agent_downloaded(host):
-    """Property 28: Elastic Agent downloaded."""
-    assert host.file("/tmp/elastic-agent.tar.gz").exists
+    tarball = f"/tmp/elastic-agent-{ELASTIC_AGENT_VERSION}-linux-x86_64.tar.gz"
+    assert host.file(tarball).exists
+
 
 def test_elastic_agent_extracted(host):
-    """Property 29: Elastic Agent extracted."""
-    # The version is hardcoded in the role, so we hardcode it here too
-    assert host.file("/opt/elastic-agent-8.15.3-linux-x86_64").is_directory
+    extracted = f"/opt/elastic-agent-{ELASTIC_AGENT_VERSION}-linux-x86_64"
+    assert host.file(extracted).is_directory
+
+
+def test_elastic_agent_binary_present(host):
+    binary = f"/opt/elastic-agent-{ELASTIC_AGENT_VERSION}-linux-x86_64/elastic-agent"
+    assert host.file(binary).exists

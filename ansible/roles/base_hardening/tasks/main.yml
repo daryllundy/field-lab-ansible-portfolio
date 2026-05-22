@@ -1,22 +1,26 @@
 - name: Set timezone
   community.general.timezone:
     name: "{{ timezone | default('UTC') }}"
+  tags: [hardening, system]
 
 - name: Ensure basic packages
   ansible.builtin.package:
     name: "{{ packages_common }}"
     state: present
+  tags: [hardening, packages]
 
 - name: Configure UFW baseline
   community.general.ufw:
     state: enabled
     policy: deny
+  tags: [hardening, firewall, security]
 
 - name: Allow SSH
   community.general.ufw:
     rule: allow
     port: 22
     proto: tcp
+  tags: [hardening, firewall, security]
 
 - name: Harden sshd_config
   ansible.builtin.lineinfile:
@@ -26,18 +30,21 @@
     state: present
     backup: true
   notify: Restart ssh
+  tags: [hardening, ssh, security]
 
 - name: Ensure fail2ban enabled
   ansible.builtin.service:
     name: fail2ban
     enabled: true
     state: started
+  tags: [hardening, security]
 
 - name: Enable unattended-upgrades
   ansible.builtin.apt:
     name: unattended-upgrades
     state: present
   when: ansible_facts['os_family'] == 'Debian'
+  tags: [hardening, packages, patching]
 
 - name: Configure automatic updates
   ansible.builtin.copy:
@@ -47,3 +54,4 @@
       APT::Periodic::Unattended-Upgrade "1";
     mode: '0644'
   when: ansible_facts['os_family'] == 'Debian'
+  tags: [hardening, patching]

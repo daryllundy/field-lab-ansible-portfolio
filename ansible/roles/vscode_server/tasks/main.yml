@@ -3,14 +3,17 @@
     url: https://code-server.dev/install.sh
     dest: /tmp/code-server-install.sh
     mode: '0755'
+  tags: [vscode, devtools]
 
 - name: Install VS Code Server (code-server)
   ansible.builtin.command: /tmp/code-server-install.sh
   args:
     creates: /usr/bin/code-server
+  tags: [vscode, devtools]
 
 - name: Enable code-server service
   ansible.builtin.systemd:
     name: code-server@{{ admin_user }}
     enabled: true
     state: started
+  tags: [vscode, devtools]

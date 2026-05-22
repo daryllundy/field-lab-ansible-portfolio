@@ -1,0 +1,8 @@
+timezone: UTC
+packages_common:
+  - curl
+  - vim
+  - git
+  - ufw
+  - fail2ban
+unattended_upgrades: true

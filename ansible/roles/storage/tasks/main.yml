@@ -5,18 +5,22 @@
       - restic
     state: present
     update_cache: true
+  tags: [storage, packages]
 
-- name: Ensure export path
+- name: Ensure NFS export path exists
   ansible.builtin.file:
     path: "{{ nfs_export_path }}"
     state: directory
     mode: "0755"
+  tags: [storage, nfs]
 
-- name: Configure exports
+- name: Configure NFS exports
   ansible.builtin.copy:
     dest: /etc/exports.d/lab.exports
-    content: "{{ nfs_export_path }} 192.168.0.0/16(rw,sync,no_subtree_check)"
+    content: "{{ nfs_export_path }} {{ nfs_clients }}(rw,sync,no_subtree_check)\n"
+    mode: "0644"
   notify: Exportfs reload
+  tags: [storage, nfs]
 
 - name: Initialize restic repo
   ansible.builtin.command:
@@ -25,3 +29,4 @@
     RESTIC_PASSWORD: "{{ restic_password }}"
   args:
     creates: "{{ restic_repo }}/config"
+  tags: [storage, backup]

@@ -2,3 +2,8 @@
   ansible.builtin.service:
     name: ssh
     state: restarted
+
+- name: Restart auditd
+  ansible.builtin.service:
+    name: auditd
+    state: restarted

@@ -1,0 +1,5 @@
+domain={{ lab_domain }}
+{% for range in dhcp_ranges %}
+dhcp-range={{ range }}
+{% endfor %}
+dhcp-option=option:dns-server,{{ dns_server }}

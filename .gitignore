@@ -1,6 +1,9 @@
 # OS
 .DS_Store
 
+# Editor / agent local settings
+.claude/
+
 # Python
 __pycache__/
 *.pyc
@@ -14,6 +17,7 @@ node_modules/
 *.retry
 .env
 .venv/
+.vault_pass
 
 # Logs
 logs/

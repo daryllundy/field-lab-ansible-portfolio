@@ -1,0 +1,2 @@
+restic_repo: /srv/backup/repo
+restic_password: ""

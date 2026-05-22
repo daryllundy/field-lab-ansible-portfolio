@@ -1,26 +1,82 @@
-- name: Get current timestamp
-  ansible.builtin.command: date -Is
-  register: current_date
-  changed_when: false
+- name: Create dr-test source directory
+  ansible.builtin.file:
+    path: /tmp/dr-test-source
+    state: directory
+    mode: "0755"
+  tags: [dr]
 
-- name: Log DR test start
+- name: Write test data for backup
+  ansible.builtin.copy:
+    dest: /tmp/dr-test-source/canary.txt
+    content: "dr-test canary {{ ansible_date_time.iso8601 }}"
+    mode: "0644"
+  tags: [dr]
+
+- name: Initialize restic repo if not already done
+  ansible.builtin.command:
+    cmd: restic init --repo "{{ restic_repo }}"
+  environment:
+    RESTIC_PASSWORD: "{{ restic_password }}"
+  args:
+    creates: "{{ restic_repo }}/config"
+  tags: [dr]
+
+- name: Back up test source directory
+  ansible.builtin.command:
+    cmd: restic backup /tmp/dr-test-source --repo "{{ restic_repo }}" --tag dr-test
+  environment:
+    RESTIC_PASSWORD: "{{ restic_password }}"
+  changed_when: true
+  tags: [dr]
+
+- name: Create temp restore directory
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: dr_restore_
+  register: restore_dir
+  tags: [dr]
+
+- name: Restore latest dr-test snapshot
+  ansible.builtin.command:
+    cmd: restic restore latest --repo "{{ restic_repo }}" --tag dr-test --target "{{ restore_dir.path }}"
+  environment:
+    RESTIC_PASSWORD: "{{ restic_password }}"
+  tags: [dr]
+
+- name: Verify canary file was restored
+  ansible.builtin.stat:
+    path: "{{ restore_dir.path }}/tmp/dr-test-source/canary.txt"
+  register: restored_canary
+  tags: [dr]
+
+- name: Fail if canary file is missing from restore
+  ansible.builtin.fail:
+    msg: "DR test FAILED: canary not found at {{ restore_dir.path }}"
+  when: not restored_canary.stat.exists
+  tags: [dr]
+
+- name: Remove restore directory
+  ansible.builtin.file:
+    path: "{{ restore_dir.path }}"
+    state: absent
+  tags: [dr]
+
+- name: Remove dr-test source directory
+  ansible.builtin.file:
+    path: /tmp/dr-test-source
+    state: absent
+  tags: [dr]
+
+- name: Get timestamp
+  ansible.builtin.command: date -Is
+  register: dr_timestamp
+  changed_when: false
+  tags: [dr]
+
+- name: Log DR test result
   ansible.builtin.lineinfile:
     path: /var/log/dr-test.log
-    line: "{{ current_date.stdout }} DR test start"
+    line: "{{ dr_timestamp.stdout }} DR test PASSED: backup and restore of canary verified"
     create: true
     mode: "0644"
-
-- name: Log DR test simulation
-  ansible.builtin.lineinfile:
-    path: /var/log/dr-test.log
-    line: "Simulating restore validation..."
-
-- name: Get end timestamp
-  ansible.builtin.command: date -Is
-  register: end_date
-  changed_when: false
-
-- name: Log DR test end
-  ansible.builtin.lineinfile:
-    path: /var/log/dr-test.log
-    line: "{{ end_date.stdout }} DR test end"
+  tags: [dr]
